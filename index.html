@@ -3,168 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Klico IA - Bazar Vendas & Dropshipping Automático</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <title>Checkout Pix Automático</title>
   <style>
-    body { background-color: #0b0f17; color: #f0f6fc; font-family: system-ui, -apple-system, sans-serif; }
-    .card { background-color: #111622; border: 1px solid #1f293d; }
-    .sidebar-item-active { background-color: #ff55001a; border-right: 3px solid #ff5500; color: #ff5500; }
-  </style>
-</head>
-<body class="min-h-screen flex flex-col md:flex-row">
-
-  <!-- ================= TELA DE CONFIGURAÇÃO DE PAGAMENTO & AFILIADOS ================= -->
-  <div id="screenConfig" class="fixed inset-0 z-50 bg-[#0b0f17] flex justify-center items-center p-4">
-    <div class="w-full max-w-lg card rounded-2xl p-6 shadow-2xl space-y-5">
-      <div class="flex items-center gap-3">
-        <div class="bg-orange-500 text-white font-bold w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-lg">
-          K
-        </div>
-        <div>
-          <h1 class="text-xl font-bold text-white">Klico IA - Recebimento Automático</h1>
-          <p class="text-xs text-gray-400">Configure como você vai receber pelas vendas</p>
-        </div>
-      </div>
-
-      <form id="configForm" onsubmit="salvarConfiguracoes(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-gray-300 mb-1">Chave Pix / Mercado Pago Access Token (Para receber direto)</label>
-          <input type="text" id="mpToken" placeholder="APP_USR-xxxxxx..." class="w-full bg-[#0b0f17] border border-[#1f293d] rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-green-500">
-          <p class="text-[10px] text-gray-400 mt-1">O dinheiro das vendas cai direto na sua conta bancária via Pix.</p>
-        </div>
-
-        <div>
-          <label class="block text-xs font-medium text-gray-300 mb-1">Tag Afiliado Shopee</label>
-          <input type="text" id="shopeeTag" placeholder="exemplo_shopee_123" class="w-full bg-[#0b0f17] border border-[#1f293d] rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500">
-        </div>
-
-        <div>
-          <label class="block text-xs font-medium text-gray-300 mb-1">Tag Afiliado Mercado Livre</label>
-          <input type="text" id="mlTag" placeholder="exemplo_ml_123" class="w-full bg-[#0b0f17] border border-[#1f293d] rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-yellow-500">
-        </div>
-
-        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition duration-200 flex justify-center items-center gap-2 shadow-lg cursor-pointer text-sm">
-          <i class="fas fa-wallet"></i> Salvar e Ativar Vendas Automáticas
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= PAINEL DO BAZAR AUTOMÁTICO ================= -->
-  <div id="screenDashboard" class="flex-1 flex flex-col md:flex-row min-h-screen">
-    
-    <!-- MENU LATERAL -->
-    <aside class="w-full md:w-64 border-r border-[#1f293d] bg-[#0b0f17] flex flex-col justify-between">
-      <div>
-        <div class="p-5 flex items-center justify-between border-b border-[#1f293d]">
-          <div class="flex items-center gap-2">
-            <div class="bg-orange-500 text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center text-lg">K</div>
-            <span class="font-bold text-white text-lg">Klico<span class="text-orange-500">Pay</span></span>
-          </div>
-          <span class="text-[10px] bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full font-semibold">Pix Ativo</span>
-        </div>
-
-        <nav class="mt-4 space-y-1">
-          <a href="#" class="flex items-center gap-3 px-5 py-3 text-sm font-medium sidebar-item-active transition">
-            <i class="fas fa-cash-register w-5 text-center"></i> Vendas & Automatização
-          </a>
-          <a href="#" class="flex items-center gap-3 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white transition">
-            <i class="fas fa-boxes-packing w-5 text-center"></i> Pedidos & Envios
-          </a>
-          <a href="#" class="flex items-center gap-3 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white transition">
-            <i class="fas fa-robot w-5 text-center"></i> Divulgação Automática
-          </a>
-          <button onclick="abrirConfiguracoes()" class="w-full flex items-center gap-3 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white transition text-left">
-            <i class="fas fa-cog w-5 text-center"></i> Configurações / Pix
-          </button>
-        </nav>
-      </div>
-
-      <div class="p-4 border-t border-[#1f293d] flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center font-bold text-xs"><i class="fas fa-dollar-sign"></i></div>
-          <div class="text-xs">
-            <p class="font-medium text-white">Recebimento Automático</p>
-            <p class="text-green-400 text-[10px]">Conta Conectada</p>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- ÁREA PRINCIPAL -->
-    <main class="flex-1 p-4 md:p-8 bg-[#070a0f] space-y-6">
-      
-      <!-- Cabeçalho -->
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-semibold mb-2">
-            <i class="fas fa-check-circle"></i> FLUXO DE VENDAS 100% AUTOMÁTICO
-          </div>
-          <h1 class="text-2xl font-bold text-white">Bazar Auto-Vendas & Dropshipping</h1>
-          <p class="text-xs text-gray-400">O cliente paga pelo Pix no site, o dinheiro vai direto para você e o fornecedor recebe o pedido para envio.</p>
-        </div>
-      </div>
-
-      <!-- Métricas de Recebimento -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="card p-4 rounded-xl border-l-4 border-l-green-500">
-          <p class="text-xs text-gray-400">Total Recebido (Hoje)</p>
-          <p class="text-xl font-bold text-white mt-1">R$ 389,90</p>
-        </div>
-        <div class="card p-4 rounded-xl border-l-4 border-l-orange-500">
-          <p class="text-xs text-gray-400">Pedidos Processados</p>
-          <p class="text-xl font-bold text-white mt-1">5 Unidades</p>
-        </div>
-        <div class="card p-4 rounded-xl border-l-4 border-l-blue-500">
-          <p class="text-xs text-gray-400">Envios Automáticos</p>
-          <p class="text-xl font-bold text-white mt-1">100% Concluídos</p>
-        </div>
-      </div>
-
-      <!-- Vitrine de Produtos com Checkout Automático -->
-      <div class="card rounded-2xl p-5 space-y-4">
-        <h2 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fas fa-store text-orange-500"></i> Produtos Prontos para Venda Automática
-        </h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          
-          <div class="bg-[#0b0f17] border border-[#1f293d] rounded-xl p-4 space-y-3">
-            <div class="flex justify-between items-start">
-              <span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] font-bold px-2 py-0.5 rounded">Pix Instântaneo</span>
-              <span class="text-xs font-bold text-white">R$ 69,90</span>
-            </div>
-            <p class="text-sm font-semibold text-white">Mini Processador Turbo</p>
-            <p class="text-xs text-gray-400">Lucro direto: R$ 35,00 por venda</p>
-            <button onclick="simularVenda('Mini Processador Turbo', 69.90)" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold text-xs py-2.5 rounded-lg transition flex items-center justify-center gap-2">
-              <i class="fas fa-qrcode"></i> Vender via Pix Automático
-            </button>
-          </div>
-
-          <div class="bg-[#0b0f17] border border-[#1f293d] rounded-xl p-4 space-y-3">
-            <div class="flex justify-between items-start">
-              <span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] font-bold px-2 py-0.5 rounded">Pix Instântaneo</span>
-              <span class="text-xs font-bold text-white">R$ 89,90</span>
-            </div>
-            <p class="text-sm font-semibold text-white">Suporte Articulado Veicular</p>
-            <p class="text-xs text-gray-400">Lucro direto: R$ 42,00 por venda</p>
-            <button onclick="simularVenda('Suporte Articulado Veicular', 89.90)" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold text-xs py-2.5 rounded-lg transition flex items-center justify-center gap-2">
-              <i class="fas fa-qrcode"></i> Vender via Pix Automático
-            </button>
-          </div>
-
-          <div class="bg-[#0b0f17] border border-[#1f293d] rounded-xl p-4 space-y-3">
-            <div class="flex justify-between items-start">
-              <span class="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] font-bold px-2 py-0.5 rounded">Link Afiliado</span>
-              <span class="text-xs font-bold text-white">Comissão ~15%</span>
-            </div>
-            <p class="text-sm font-semibold text-white">Fita LED RGB 5m</p>
-            <p class="text-xs text-gray-400">Venda direta pela Shopee</p>
-            <button onclick="venderAfiliado('Fita LED RGB 5m')" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs py-2.5 rounded-lg transition flex items-center justify-center gap-2">
-              <i class="fas fa-external-link-alt"></i> Redirecionar p/ Shopee
-            </button>
-          </div>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0d1117;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    h2 { color: #f0f6fc; margin-top: 0; }
+    label { font-size: 14px; color: #8b949e; display: block; margin-top: 12px; }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #30363d;
+      background: #0d1117;
+      color: #fff;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      background-color: #238636;
+      color: white;
+      border: none;
+      padding: 12px;
+      margin-top: 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { background-color: #2ea043; }
+    #pix-container {
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+    }
+    #qr-code-img { width: 200px; height: 200px; margin: 10px 0; }
+    textarea {
+      width: 100%;
+      height: 70px;
+      background: #0d1117;
+      color: #fff;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 8px;
+      box-sizing: border-box
+        
 
         </div>
       </div>
