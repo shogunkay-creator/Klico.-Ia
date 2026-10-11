@@ -3,108 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checkout Pix Automático</title>
+  <title>Oferta Especial | Entrega Automática</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background-color: #0d1117;
-      color: #ffffff;
+      background-color: #0b0f19;
+      color: #e2e8f0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      margin: 0;
-      padding: 20px;
+    }
+    .top-bar {
+      width: 100%;
+      background: #1e293b;
+      text-align: center;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #38bdf8;
+      border-bottom: 1px solid #334155;
     }
     .card {
-      background-color: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      margin: 24px auto;
+      background: #111827;
+      border-radius: 16px;
       padding: 24px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      border: 1px solid #1f2937;
     }
-    h2 { color: #f0f6fc; margin-top: 0; }
-    label { font-size: 14px; color: #8b949e; display: block; margin-top: 12px; }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 6px;
-      border: 1px solid #30363d;
-      background: #0d1117;
-      color: #fff;
-      box-sizing: border-box;
+    .badge {
+      background: #dc2626;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
     }
-    button {
-      width: 100%;
-      background-color: #238636;
-      color: white;
-      border: none;
-      padding: 12px;
-      margin-top: 20px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #f9fafb;
     }
-    button:hover { background-color: #2ea043; }
-    #pix-container {
-      margin-top: 20px;
+    p.desc {
+      color: #9ca3af;
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .product-img {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: block;
+      object-fit: cover;
+    }
+    .price-container {
+      background: #0d1321;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px dashed #3b82f6;
       text-align: center;
-      display: none;
+      margin-bottom: 20px;
     }
-    #qr-code-img { width: 200px; height: 200px; margin: 10px 0; }
-    textarea {
+    .old-price {
+      text-decoration: line-through;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .current-price {
+      font-size: 30px;
+      font-weight: 800;
+      color: #22c55e;
+      margin-top: 4px;
+    }
+    .btn-buy {
+      display: block;
       width: 100%;
-      height: 70px;
-      background: #0d1117;
-      color: #fff;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      padding: 8px;
-      box-sizing: border-box
-        
-
-        </div>
-      </div>
-
-    </main>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedMp = localStorage.getItem('klico_mp_token');
-      if (savedMp) {
-        document.getElementById('screenConfig').classList.add('hidden');
-      }
-    });
-
-    function salvarConfiguracoes(event) {
-      event.preventDefault();
-      const mp = document.getElementById('mpToken').value.trim();
-      const shopee = document.getElementById('shopeeTag').value.trim();
-      const ml = document.getElementById('mlTag').value.trim();
-
-      localStorage.setItem('klico_mp_token', mp);
-      localStorage.setItem('klico_shopee_tag', shopee);
-      localStorage.setItem('klico_ml_tag', ml);
-
-      document.getElementById('screenConfig').classList.add('hidden');
+      background: #22c55e;
+      color: #ffffff;
+      text-align: center;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+      transition: background 0.2s, transform 0.1s;
     }
-
-    function abrirConfiguracoes() {
-      document.getElementById('screenConfig').classList.remove('hidden');
+    .btn-buy:hover {
+      background: #16a34a;
+      transform: translateY(-1px);
     }
-
-    function simularVenda(produto, valor) {
-      alert(`✅ QR Code Pix Gerado Automaticamente para "${produto}" (R$ ${valor.toFixed(2)})!\n\nAssim que o cliente pagar, o dinheiro entra na sua conta e o fornecedor recebe a ordem de envio!`);
-    }
-
-    function venderAfiliado(produto) {
-      const tag = localStorage.getItem('klico_shopee_tag') || 'tag_padrao';
-      alert(`🚀 Cliente redirecionado para a Shopee com a sua tag "${tag}" para garantir a sua comissão automática!`);
-    }
-  </script>
-</body>
-</html>
+    .security-
