@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Klico IA - Conexões & Configurações</title>
+  <title>Klico IA - Automação & Afiliados</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
-    body { background-color: #0d1117; color: #f0f6fc; font-family: sans-serif; }
+    body { background-color: #0d1117; color: #f0f6fc; font-family: system-ui, -apple-system, sans-serif; }
     .card { background-color: #161b22; border: 1px solid #30363d; }
   </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 flex justify-center items-center">
-  <div class="w-full max-w-lg card rounded-2xl p-6 shadow-2xl">
+
+  <!-- ================= TELA DE CONFIGURAÇÃO ================= -->
+  <div id="screenConfig" class="w-full max-w-lg card rounded-2xl p-6 shadow-2xl">
     <!-- Header -->
     <div class="flex items-center gap-3 mb-6">
-      <div class="bg-orange-500 text-white font-bold w-10 h-10 rounded-lg flex items-center justify-center text-xl">
+      <div class="bg-orange-500 text-white font-bold w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-lg">
         K
       </div>
       <div>
@@ -55,37 +57,140 @@
 
       <button 
         type="submit" 
-        class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition duration-200 flex justify-center items-center gap-2 shadow-lg"
+        class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition duration-200 flex justify-center items-center gap-2 shadow-lg cursor-pointer"
       >
         <i class="fas fa-save"></i> Salvar Configurações
       </button>
     </form>
+  </div>
 
-    <div id="mensagemSucesso" class="hidden mt-4 p-3 bg-green-900/50 border border-green-500 text-green-200 text-sm rounded-lg text-center">
-      <i class="fas fa-check-circle mr-1"></i> Configurações salvas com sucesso no seu dispositivo!
+  <!-- ================= PAINEL PRINCIPAL DO KLICO IA ================= -->
+  <div id="screenDashboard" class="w-full max-w-2xl card rounded-2xl p-6 shadow-2xl hidden">
+    <!-- Header do Painel -->
+    <div class="flex items-center justify-between border-b border-[#30363d] pb-4 mb-6">
+      <div class="flex items-center gap-3">
+        <div class="bg-orange-500 text-white font-bold w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-lg">
+          K
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-white">Painel Klico IA</h1>
+          <p class="text-xs text-gray-400" id="displayShopeeTag">Tag de Afiliado: --</p>
+        </div>
+      </div>
+      <button onclick="abrirConfiguracoes()" class="text-xs bg-[#21262d] hover:bg-[#30363d] border border-[#30363d] text-gray-300 px-3 py-2 rounded-lg transition flex items-center gap-1.5">
+        <i class="fas fa-cog"></i> Configurações
+      </button>
+    </div>
+
+    <!-- Conteúdo do Painel -->
+    <div class="space-y-6">
+      <!-- Gerador de Link com Tag -->
+      <div class="bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
+        <h2 class="text-sm font-semibold text-white mb-2 flex items-center gap-2">
+          <i class="fas fa-link text-orange-500"></i> Converter Link Shopee
+        </h2>
+        <div class="space-y-3">
+          <input 
+            type="url" 
+            id="shopeeUrlInput" 
+            placeholder="Cole o link do produto Shopee aqui..." 
+            class="w-full bg-[#161b22] border border-[#30363d] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-500"
+          >
+          <button onclick="gerarLinkAfiliado()" class="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold py-2 rounded-lg transition">
+            Gerar Link com Tag
+          </button>
+        </div>
+        <div id="resultadoLink" class="hidden mt-3 p-3 bg-[#161b22] border border-orange-500/30 rounded-lg text-xs break-all">
+          <span class="text-gray-400 block mb-1">Seu link de afiliado:</span>
+          <a id="linkAfiliadoGerado" href="#" target="_blank" class="text-orange-400 font-mono underline"></a>
+        </div>
+      </div>
+
+      <!-- Gerador de Legenda com IA -->
+      <div class="bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
+        <h2 class="text-sm font-semibold text-white mb-2 flex items-center gap-2">
+          <i class="fas fa-magic text-orange-500"></i> Criar Legenda para Redes Sociais
+        </h2>
+        <textarea 
+          id="descricaoProduto" 
+          rows="3" 
+          placeholder="Digite o nome do produto ou detalhes para criar a legenda..." 
+          class="w-full bg-[#161b22] border border-[#30363d] rounded-lg p-3 text-sm text-white focus:outline-none focus:border-orange-500 resize-none mb-3"
+        ></textarea>
+        <button onclick="gerarLegendaIA()" class="w-full bg-[#21262d] hover:bg-[#30363d] border border-[#30363d] text-white text-sm font-semibold py-2 rounded-lg transition flex justify-center items-center gap-2">
+          <i class="fas fa-robot text-orange-500"></i> Gerar Legenda Comercial
+        </button>
+        <div id="resultadoLegenda" class="hidden mt-3 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-gray-200 whitespace-pre-line"></div>
+      </div>
     </div>
   </div>
 
   <script>
-    // Carregar configurações guardadas previamente
+    // Inicialização da Aplicação
     document.addEventListener('DOMContentLoaded', () => {
-      const savedTag = localStorage.getItem('klico_shopee_tag') || '';
-      const savedKey = localStorage.getItem('klico_gemini_key') || '';
-      if(savedTag) document.getElementById('shopeeTag').value = savedTag;
-      if(savedKey) document.getElementById('geminiKey').value = savedKey;
+      const savedTag = localStorage.getItem('klico_shopee_tag');
+      const savedKey = localStorage.getItem('klico_gemini_key');
+
+      if (savedTag) {
+        document.getElementById('shopeeTag').value = savedTag;
+        if (savedKey) document.getElementById('geminiKey').value = savedKey;
+        exibirDashboard(savedTag);
+      } else {
+        exibirConfiguracoes();
+      }
     });
 
+    // Guardar Configurações e Mudar de Tela
     function salvarConfiguracoes(event) {
       event.preventDefault();
       const tag = document.getElementById('shopeeTag').value.trim();
       const key = document.getElementById('geminiKey').value.trim();
 
+      if (!tag) return;
+
       localStorage.setItem('klico_shopee_tag', tag);
       localStorage.setItem('klico_gemini_key', key);
 
-      const msg = document.getElementById('mensagemSucesso');
-      msg.classList.remove('hidden');
-      setTimeout(() => msg.classList.add('hidden'), 3000);
+      exibirDashboard(tag);
+    }
+
+    // Alternar para o Painel Principal
+    function exibirDashboard(tag) {
+      document.getElementById('screenConfig').classList.add('hidden');
+      document.getElementById('screenDashboard').classList.remove('hidden');
+      document.getElementById('displayShopeeTag').innerText = 'Tag de Afiliado: ' + tag;
+    }
+
+    // Voltar para a Tela de Configuração
+    function abrirConfiguracoes() {
+      document.getElementById('screenDashboard').classList.add('hidden');
+      document.getElementById('screenConfig').classList.remove('hidden');
+    }
+
+    // Função de Exemplo para Converter Link
+    function gerarLinkAfiliado() {
+      const input = document.getElementById('shopeeUrlInput').value.trim();
+      const tag = localStorage.getItem('klico_shopee_tag');
+      if (!input) return;
+
+      const separador = input.includes('?') ? '&' : '?';
+      const linkFinal = `${input}${separador}sub_id=${encodeURIComponent(tag)}`;
+
+      const boxResultado = document.getElementById('resultadoLink');
+      const tagA = document.getElementById('linkAfiliadoGerado');
+      tagA.href = linkFinal;
+      tagA.innerText = linkFinal;
+      boxResultado.classList.remove('hidden');
+    }
+
+    // Função Simples de Legenda
+    function gerarLegendaIA() {
+      const desc = document.getElementById('descricaoProduto').value.trim();
+      const boxLegenda = document.getElementById('resultadoLegenda');
+      if (!desc) return;
+
+      boxLegenda.innerText = `🔥 IMPERDÍVEL! ${desc}\n\nGaranta o seu com desconto exclusivo pelo link na bio ou comente "EU QUERO"! 🛍️✨`;
+      boxLegenda.classList.remove('hidden');
     }
   </script>
 </body>
