@@ -3,107 +3,116 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oferta Especial | Entrega Automática</title>
+  <title>Oferta Especial</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-family: Arial, sans-serif;
     }
     body {
-      background-color: #0b0f19;
-      color: #e2e8f0;
+      background-color: #0d1117;
+      color: #ffffff;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      padding: 20px;
     }
-    .top-bar {
+    .container {
+      max-width: 480px;
       width: 100%;
-      background: #1e293b;
-      text-align: center;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #38bdf8;
-      border-bottom: 1px solid #334155;
-    }
-    .card {
-      max-width: 500px;
-      width: 90%;
-      margin: 24px auto;
-      background: #111827;
-      border-radius: 16px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
       padding: 24px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-      border: 1px solid #1f2937;
+      margin-top: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
     .badge {
-      background: #dc2626;
+      background-color: #e53e3e;
       color: #ffffff;
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: bold;
       padding: 4px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
+      border-radius: 12px;
       display: inline-block;
       margin-bottom: 12px;
-      letter-spacing: 0.5px;
     }
     h1 {
       font-size: 22px;
       margin-bottom: 10px;
-      color: #f9fafb;
     }
     p.desc {
-      color: #9ca3af;
+      color: #8b949e;
       font-size: 14px;
-      margin-bottom: 20px;
       line-height: 1.5;
+      margin-bottom: 20px;
     }
     .product-img {
       width: 100%;
-      border-radius: 12px;
+      border-radius: 8px;
       margin-bottom: 20px;
-      display: block;
-      object-fit: cover;
+      background-color: #21262d;
     }
-    .price-container {
-      background: #0d1321;
+    .price-box {
+      background: #0d1117;
+      border: 1px dashed #388bfd;
+      border-radius: 8px;
       padding: 16px;
-      border-radius: 12px;
-      border: 1px dashed #3b82f6;
       text-align: center;
       margin-bottom: 20px;
     }
     .old-price {
       text-decoration: line-through;
-      color: #6b7280;
+      color: #8b949e;
       font-size: 14px;
     }
     .current-price {
-      font-size: 30px;
-      font-weight: 800;
-      color: #22c55e;
+      font-size: 28px;
+      font-weight: bold;
+      color: #2ea043;
       margin-top: 4px;
     }
     .btn-buy {
       display: block;
       width: 100%;
-      background: #22c55e;
+      background-color: #238636;
       color: #ffffff;
       text-align: center;
       text-decoration: none;
       font-size: 18px;
-      font-weight: 700;
+      font-weight: bold;
       padding: 16px;
-      border-radius: 10px;
-      box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
-      transition: background 0.2s, transform 0.1s;
+      border-radius: 8px;
+      box-sizing: border-box;
     }
     .btn-buy:hover {
-      background: #16a34a;
-      transform: translateY(-1px);
+      background-color: #2ea043;
     }
-    .security-
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <span class="badge">PROMOÇÃO</span>
+    <h1>Nome do Seu Produto</h1>
+    <p class="desc">Descrição do produto ou serviço que você está promovendo.</p>
+
+    <!-- Troque a URL abaixo pela imagem real do produto -->
+    <img src="https://via.placeholder.com/480x270/21262d/ffffff?text=Foto+do+Produto" alt="Produto" class="product-img">
+
+    <div class="price-box">
+      <div class="old-price">De R$ 197,00</div>
+      <div class="current-price">Por R$ 97,00</div>
+    </div>
+
+    <!-- COLOQUE O SEU LINK DE AFILIADO/CHECKOUT NO HREF ABAIXO -->
+    <a href="https://SEU_LINK_DE_AFILIADO_AQUI" class="btn-buy" target="_blank">
+      COMPRAR AGORA
+    </a>
+  </div>
+
+</body>
+</html>
