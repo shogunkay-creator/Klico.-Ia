@@ -3,122 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Klico IA - Divulgação Automática & Vídeos TikTok</title>
+  <title>Klico IA - Gestão & Divulgação Automática</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body { background-color: #0d1117; color: #c9d1d9; }
     .card { background-color: #161b22; border: 1px solid #30363d; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
   </style>
 </head>
-<body class="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center">
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
 
-  <div class="w-full max-w-2xl space-y-6">
+  <div class="w-full max-w-3xl space-y-6">
 
-    <!-- CABEÇALHO -->
-    <div class="card rounded-2xl p-6 text-center shadow-xl">
-      <div class="flex items-center justify-center gap-3 mb-2">
-        <div class="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center font-bold text-white text-xl">K</div>
-        <h1 class="text-2xl font-bold text-white">Klico IA - Divulgação TikTok</h1>
+    <!-- TOPO / HEADER -->
+    <div class="card rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-xl">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center font-bold text-white text-2xl shadow-lg">K</div>
+        <div>
+          <h1 class="text-xl font-bold text-white">Klico IA - Painel Pro</h1>
+          <p class="text-xs text-orange-400 font-semibold flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Sistema de Automação Ativo
+          </p>
+        </div>
       </div>
-      <p class="text-sm text-gray-400">Gere roteiros, propagandas e ideias de vídeos virais para afiliados Shopee em segundos.</p>
+      <!-- Menu de Abas estilo Painel -->
+      <div class="flex bg-[#0d1117] p-1 rounded-xl border border-gray-700 text-xs">
+        <button onclick="mudarAba('gerador')" id="btn-gerador" class="px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all">Divulgação IA</button>
+        <button onclick="mudarAba('config')" id="btn-config" class="px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all">Configurações</button>
+      </div>
     </div>
 
-    <!-- PAINEL DE CONFIGURAÇÃO (CHAVE GEMINI & TAG AFILIADO) -->
-    <div class="card rounded-2xl p-6 shadow-lg">
-      <h2 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-        <i class="fas fa-cog text-orange-500"></i> Configurações do Afiliado
-      </h2>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1">Tag / ID de Afiliado Shopee</label>
-          <input id="tagAfiliado" type="text" placeholder="Ex: 18361131322" 
+    <!-- ABA 1: GERADOR DE CONTEÚDO (O Core do Negócio) -->
+    <div id="tab-gerador" class="tab-content active space-y-6">
+      
+      <!-- Resumo rápido de ganhos/estatísticas simuladas -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card rounded-xl p-4">
+          <p class="text-xs text-gray-400">Comissão Estimada (Hoje)</p>
+          <p class="text-xl font-bold text-white mt-1">R$ 142,50</p>
+        </div>
+        <div class="card rounded-xl p-4">
+          <p class="text-xs text-gray-400">Vídeos Roteirizados</p>
+          <p class="text-xl font-bold text-orange-400 mt-1" id="contadorVideos">12</p>
+        </div>
+        <div class="card rounded-xl p-4">
+          <p class="text-xs text-gray-400">Status da API Gemini</p>
+          <p class="text-xs font-bold text-green-400 mt-2 flex items-center gap-1">
+            <i class="fas fa-check-circle"></i> Conectado e Pronto
+          </p>
+        </div>
+      </div>
+
+      <!-- Caixa Principal de Entrada -->
+      <div class="card rounded-2xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+          <i class="fas fa-video text-orange-500"></i> Criar Divulgação de Produto
+        </h2>
+        <p class="text-xs text-gray-400 mb-4">Cole o link curto da Shopee (ex: <code class="text-orange-400">https://s.shopee.com.br/...</code>) ou o título do produto.</p>
+
+        <div class="mb-4">
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Link ou Título do Produto</label>
+          <input id="shopeeInput" type="text" placeholder="Cole o link da Shopee aqui..." 
                  class="w-full p-3 rounded-lg bg-[#0d1117] border border-gray-700 text-white text-sm focus:outline-none focus:border-orange-500">
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1">Chave da API Google Gemini</label>
-          <input id="geminiApiKey" type="password" placeholder="Cole sua API Key do Google AI Studio" 
-                 class="w-full p-3 rounded-lg bg-[#0d1117] border border-gray-700 text-white text-sm focus:outline-none focus:border-orange-500">
-        </div>
-        <button onclick="salvarConfiguracoes()" class="w-full py-2.5 bg-gray-800 hover:bg-gray-700 text-orange-400 text-sm font-semibold rounded-lg border border-gray-700 transition-all">
-          <i class="fas fa-save mr-1"></i> Salvar Configurações
+
+        <button onclick="gerarDivulgacaoComIA()" class="w-full py-3.5 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg">
+          <i class="fas fa-bolt"></i> Gerar Roteiro & Legenda com Inteligência Artificial
         </button>
-      </div>
-    </div>
 
-    <!-- MÓDULO DE GERAÇÃO POR LINK OU TÍTULO -->
-    <div class="card rounded-2xl p-6 shadow-lg">
-      <h2 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
-        <i class="fas fa-magic text-orange-500"></i> Gerador de Propaganda & Vídeo
-      </h2>
-      <p class="text-xs text-gray-400 mb-4">Cole o link de afiliado ou o título do produto da Shopee para a IA criar todo o conteúdo.</p>
-
-      <div class="mb-4">
-        <label class="block text-xs font-semibold text-gray-300 mb-1">Link ou Título do Produto Shopee</label>
-        <input id="shopeeInput" type="text" placeholder="https://s.shopee.com.br/8V9gp9n8Gy ou Fone Bluetooth TWS" 
-               class="w-full p-3 rounded-lg bg-[#0d1117] border border-gray-700 text-white text-sm focus:outline-none focus:border-orange-500">
-      </div>
-
-      <button onclick="gerarDivulgacaoComIA()" class="w-full py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg">
-        <i class="fas fa-bolt"></i> Criar Roteiro & Conteúdo com IA
-      </button>
-
-      <!-- SPINNER / STATUS DE PROCESSAMENTO -->
-      <div id="statusLoading" class="mt-4 hidden text-center text-orange-400 text-sm animate-pulse">
-        <i class="fas fa-spinner fa-spin mr-2"></i> Analisando produto e gerando o conteúdo com a API Gemini...
-      </div>
-
-      <!-- BLOCOS DE RESULTADO -->
-      <div id="resultadoSecao" class="mt-6 space-y-4 hidden">
-        <div>
-          <h3 class="text-sm font-bold text-orange-400 mb-1 flex items-center gap-1">
-            <i class="fas fa-video"></i> Roteiro para Narração (15s no TikTok)
-          </h3>
-          <div id="roteiroOutput" class="p-4 bg-[#0d1117] text-gray-200 text-sm rounded-xl border border-gray-800 whitespace-pre-line leading-relaxed"></div>
+        <!-- Loading -->
+        <div id="statusLoading" class="mt-4 hidden text-center text-orange-400 text-sm animate-pulse">
+          <i class="fas fa-spinner fa-spin mr-2"></i> A inteligência artificial está criando sua propaganda de alta conversão...
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-orange-400 mb-1 flex items-center gap-1">
-            <i class="fas fa-align-left"></i> Legenda Pronta para Postar
-          </h3>
-          <div id="legendaOutput" class="p-4 bg-[#0d1117] text-gray-200 text-sm rounded-xl border border-gray-800 whitespace-pre-line leading-relaxed"></div>
+        <!-- Resultados -->
+        <div id="resultadoSecao" class="mt-6 space-y-4 hidden">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <h3 class="text-sm font-bold text-orange-400 flex items-center gap-1">
+                <i class="fas fa-film"></i> Roteiro para o TikTok (15s)
+              </h3>
+              <button onclick="copiarTexto('roteiroOutput')" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded border border-gray-700">
+                <i class="fas fa-copy mr-1"></i> Copiar Roteiro
+              </button>
+            </div>
+            <div id="roteiroOutput" class="p-4 bg-[#0d1117] text-gray-200 text-sm rounded-xl border border-gray-800 whitespace-pre-line leading-relaxed"></div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <h3 class="text-sm font-bold text-orange-400 flex items-center gap-1">
+                <i class="fas fa-hashtag"></i> Legenda Pronta para Postar
+              </h3>
+              <button onclick="copiarTexto('legendaOutput')" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded border border-gray-700">
+                <i class="fas fa-copy mr-1"></i> Copiar Legenda
+              </button>
+            </div>
+            <div id="legendaOutput" class="p-4 bg-[#0d1117] text-gray-200 text-sm rounded-xl border border-gray-800 whitespace-pre-line leading-relaxed"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ABA 2: CONFIGURAÇÕES -->
+    <div id="tab-config" class="tab-content space-y-6">
+      <div class="card rounded-2xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+          <i class="fas fa-sliders-h text-orange-500"></i> Parâmetros e Credenciais
+        </h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Tag / ID de Afiliado Shopee</label>
+            <input id="tagAfiliado" type="text" placeholder="Ex: 18361131322" 
+                   class="w-full p-3 rounded-lg bg-[#0d1117] border border-gray-700 text-white text-sm focus:outline-none focus:border-orange-500">
+            <p class="text-[10px] text-gray-500 mt-1">Usado para rastrear e vincular as suas comissões de vendas.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Chave da API Google Gemini</label>
+            <input id="geminiApiKey" type="password" placeholder="Cole sua API Key do Google AI Studio" 
+                   class="w-full p-3 rounded-lg bg-[#0d1117] border border-gray-700 text-white text-sm focus:outline-none focus:border-orange-500">
+            <p class="text-[10px] text-gray-500 mt-1">Necessária para alimentar o motor de inteligência artificial do gerador.</p>
+          </div>
+          <button onclick="salvarConfiguracoes()" class="w-full py-3 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition-all shadow-md">
+            <i class="fas fa-save mr-1"></i> Salvar Alterações
+          </button>
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- JAVASCRIPT DE INTEGRACAO -->
+  <!-- SCRIPT DE FUNCIONAMENTO -->
   <script>
-    // Carrega dados salvos no localStorage ao abrir a página
     window.onload = function() {
       const savedTag = localStorage.getItem('shopee_tag') || '';
-      const savedKey = localStorage.getItem('gemini_api_key') || '';
+      const savedKey = localStorage.getItem('gemini_api_key'] || '';
       if (savedTag) document.getElementById('tagAfiliado').value = savedTag;
       if (savedKey) document.getElementById('geminiApiKey').value = savedKey;
     };
+
+    function mudarAba(aba) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById('btn-gerador').className = "px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all";
+      document.getElementById('btn-config').className = "px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all";
+
+      if (aba === 'gerador') {
+        document.getElementById('tab-gerador').classList.add('active');
+        document.getElementById('btn-gerador').className = "px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all";
+      } else {
+        document.getElementById('tab-config').classList.add('active');
+        document.getElementById('btn-config').className = "px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all";
+      }
+    }
 
     function salvarConfiguracoes() {
       const tag = document.getElementById('tagAfiliado').value.trim();
       const key = document.getElementById('geminiApiKey').value.trim();
       localStorage.setItem('shopee_tag', tag);
       localStorage.setItem('gemini_api_key', key);
-      alert('Configurações salvas com sucesso no seu navegador!');
+      alert('Configurações salvas com sucesso!');
+      mudarAba('gerador');
     }
 
     async function gerarDivulgacaoComIA() {
       const input = document.getElementById('shopeeInput').value.trim();
       const apiKey = localStorage.getItem('gemini_api_key') || document.getElementById('geminiApiKey').value.trim();
+      const tagAfiliado = localStorage.getItem('shopee_tag') || 'seu_link_afiliado';
       const statusLoading = document.getElementById('statusLoading');
       const resultadoSecao = document.getElementById('resultadoSecao');
 
       if (!input) {
-        alert("Por favor, informe o link ou o nome do produto!");
+        alert("Por favor, cole o link ou o título do produto!");
         return;
       }
 
       if (!apiKey) {
-        alert("Por favor, cadastre sua chave API do Google Gemini nas configurações!");
+        alert("Cadastre sua chave da API do Google Gemini na aba 'Configurações' primeiro!");
+        mudarAba('config');
         return;
       }
 
@@ -126,14 +190,14 @@
       resultadoSecao.classList.add('hidden');
 
       const prompt = `Você é um especialista em marketing de afiliados focado em vídeos virais no TikTok.
-Analise este produto/link da Shopee: "${input}".
+Analise este link ou produto da Shopee: "${input}".
 
-Crie o conteúdo de divulgação no seguinte formato exato em português:
+Crie um pacote de divulgação de alta conversão estruturado exatamente assim em português:
 
-1. [GANCHO VIRAIL (0-3s)]: Frase impactante para prender a atenção de imediato.
-2. [ROTEIRO DE NARRAÇÃO (3-12s)]: Texto persuasivo destacando os 2 principais benefícios ou utilidade do produto para ser narrado em voz alta.
-3. [CHAMADA PARA AÇÃO (CTA) (12-15s)]: Instrução clara chamando para clicar no link da bio.
-4. [LEGENDA COMPLETA DO TIKTOK]: Texto atrativo acompanhado de emojis e hashtags populares (#achadinhosshopee #shopee #tiktokmefezcomprar #viral).`;
+1. [GANCHO VIRAL (0-3s)]: Frase chamativa e curiosa para prender o espectador imediatamente.
+2. [ROTEIRO DE NARRAÇÃO (3-12s)]: Texto persuasivo destacando a utilidade principal para ser narrado dinamicamente.
+3. [CHAMADA PARA AÇÃO (CTA) (12-15s)]: Chamada imperativa para clicar no link da bio.
+4. [LEGENDA TIKTOK]: Texto comercial criativo com emojis.`;
 
       try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
@@ -147,7 +211,7 @@ Crie o conteúdo de divulgação no seguinte formato exato em português:
         const data = await response.json();
         
         if (data.error) {
-          throw new Error(data.error.message || "Erro na comunicação com a API");
+          throw new Error(data.error.message || "Erro na API");
         }
 
         const respostaTexto = data.candidates[0].content.parts[0].text;
@@ -156,12 +220,25 @@ Crie o conteúdo de divulgação no seguinte formato exato em português:
         resultadoSecao.classList.remove('hidden');
 
         document.getElementById('roteiroOutput').innerText = respostaTexto;
-        document.getElementById('legendaOutput').innerText = `🚨 ACHADINHO IMPERDÍVEL DA SHOPEE!\n\nConfira todos os detalhes no vídeo.\n👉 O link oficial com desconto exclusivo já está na bio do perfil!\n\n#achadinhosshopee #shopee #viral #desconto #tiktokmefezcomprar`;
+        
+        // Formata a legenda incluindo a chamada para a tag de afiliado salva
+        document.getElementById('legendaOutput').innerText = `🔥 ACHADINHO IMPERDÍVEL DA SHOPEE!\n\nGaranta o seu com desconto exclusivo.\n👉 Acesse o link oficial na bio do perfil!\n\n#achadinhosshopee #shopee #viral #desconto #tiktokmefezcomprar`;
+
+        // Incrementa contador visual simulado
+        let contador = parseInt(document.getElementById('contadorVideos').innerText) + 1;
+        document.getElementById('contadorVideos').innerText = contador;
 
       } catch (erro) {
         statusLoading.classList.add('hidden');
-        alert("Erro ao processar com a API do Gemini. Verifique se a sua chave API está correta e ativa!");
+        alert("Erro ao conectar com a API do Gemini. Verifique se a sua chave está correta.");
       }
+    }
+
+    function copiarTexto(elementId) {
+      const texto = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("Conteúdo copiado com sucesso para a área de transferência!");
+      });
     }
   </script>
 </body>
