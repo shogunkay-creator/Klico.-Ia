@@ -1,278 +1,30 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NewShop - Cadastro & Divulgação de Produtos</title>
-  <!-- Tailwind CSS via CDN para renderização moderna e responsiva -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Ícones Lucide -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f4f6f8; }
-  </style>
-</head>
-<body class="bg-gray-100 text-gray-800 min-h-screen">
+<!-- Módulo Automação Por Link no Klico IA -->
+<div class="w-full max-w-lg card rounded-2xl p-6 shadow-lg bg-[#161b22] border border-gray-700 mt-6">
+  <div class="flex items-center gap-2 mb-2">
+    <span class="text-2xl">🔗</span>
+    <h2 class="text-xl font-bold text-white">Gerar Propaganda por Link da Shopee</h2>
+  </div>
+  <p class="text-gray-400 text-sm mb-4">Cole o seu link de afiliado e a IA criará o roteiro e o vídeo de divulgação.</p>
 
-  <!-- Header / Barra Superior -->
-  <header class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center sticky top-0 z-30">
-    <div class="flex items-center space-x-3">
-      <div class="bg-orange-500 text-white font-bold p-2 rounded-lg text-xl flex items-center justify-center w-10 h-10">
-        NS
-      </div>
-      <div>
-        <h1 class="font-bold text-lg text-gray-900 leading-tight">NewShop Admin</h1>
-        <span class="text-xs text-green-600 font-semibold flex items-center gap-1">
-          <span class="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse"></span>
-          Painel de Produtos & Divulgação Ativo
-        </span>
-      </div>
-    </div>
-  </header>
+  <label class="block text-sm text-gray-300 mb-1">Link da Shopee (Ex: https://s.shopee.com.br/...)</label>
+  <input id="shopeeLinkInput" type="url" placeholder="https://s.shopee.com.br/8V9gp9n8Gy" 
+         class="w-full p-3 rounded-lg bg-[#0d1117] border border-gray-700 text-white mb-4 focus:outline-none focus:border-orange-500">
 
-  <main class="max-w-7xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <button onclick="processarLinkShopee()" 
+          class="w-full py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg transition-all flex justify-center items-center gap-2">
+    🚀 Processar Link & Criar Divulgação
+  </button>
 
-    <!-- FORMULÁRIO DE CADASTRO (COLUNA ESQUERDA) -->
-    <section class="lg:col-span-5 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-      <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-        <i data-lucide="plus-circle" class="text-orange-500"></i> Cadastrar Novo Produto
-      </h2>
+  <div id="statusProcessando" class="mt-4 hidden text-orange-400 text-sm animate-pulse">
+    ⏳ Extraindo dados do produto e gerando roteiro via Gemini IA...
+  </div>
 
-      <form id="productForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Produto *</label>
-          <input type="text" id="pTitle" required placeholder="Ex: Mini Projetor Smart Portátil Full HD"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm outline-none">
-        </div>
+  <div id="resultadoDivulgação" class="mt-6 hidden">
+    <!-- Resultado do Roteiro e Mídia -->
+    <h3 class="text-md font-bold text-orange-400 mb-2">🎬 Roteiro de Vídeo (TikTok/Reels)</h3>
+    <div id="roteiroOutput" class="p-3 bg-[#0d1117] text-gray-200 text-sm rounded-lg mb-4 whitespace-pre-line border border-gray-800"></div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Preço com Desconto (R$) *</label>
-            <input type="number" step="0.01" id="pPrice" required placeholder="269.90"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Preço Original (R$)</label>
-            <input type="number" step="0.01" id="pOldPrice" placeholder="399.90"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm outline-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Link de Compra / Afiliado *</label>
-          <input type="url" id="pLink" required placeholder="https://meli.la/1PgQ1ed ou link Shopee"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm outline-none">
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">URL da Imagem do Produto *</label>
-          <input type="url" id="pImg" required placeholder="https://exemplo.com/imagem.jpg"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm outline-none">
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Principais Benefícios (Separe por vírgula)</label>
-          <textarea id="pFeatures" rows="2" placeholder="Qualidade Full HD, Conexão Wi-Fi e Bluetooth, Compacto e Leve"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm outline-none"></textarea>
-        </div>
-
-        <button type="submit"
-          class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 rounded-lg transition duration-200 flex items-center justify-center gap-2 shadow-md">
-          <i data-lucide="save"></i> Cadastrar Produto
-        </button>
-      </form>
-    </section>
-
-    <!-- LISTA DE PRODUTOS E MÓDULO DE DIVULGAÇÃO (COLUNA DIREITA) -->
-    <section class="lg:col-span-7 space-y-6">
-
-      <!-- Produtos Cadastrados -->
-      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-          <i data-lucide="shopping-bag" class="text-orange-500"></i> Produtos Cadastrados
-        </h2>
-
-        <div id="productList" class="space-y-3 max-h-72 overflow-y-auto pr-1">
-          <!-- Produtos serão inseridos aqui via JS -->
-        </div>
-      </div>
-
-      <!-- Gerador de Material de Divulgação -->
-      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-        <h2 class="text-xl font-bold mb-2 text-gray-800 flex items-center gap-2">
-          <i data-lucide="share-2" class="text-orange-500"></i> Central de Divulgação Automática
-        </h2>
-        <p class="text-xs text-gray-500 mb-4">Selecione um produto cadastrado acima para gerar as legendas e roteiros prontos para uso.</p>
-
-        <div id="divulgacaoArea" class="space-y-4 hidden">
-          <!-- Copy para Redes Sociais -->
-          <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative">
-            <span class="text-xs font-bold text-orange-600 uppercase tracking-wider block mb-1">1. Legenda para Instagram / TikTok / Shorts</span>
-            <pre id="copyRedes" class="text-xs text-gray-700 whitespace-pre-wrap font-sans"></pre>
-            <button onclick="copyToClipboard('copyRedes')" class="mt-2 text-xs bg-orange-500 text-white px-3 py-1.5 rounded font-semibold hover:bg-orange-600 flex items-center gap-1">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Legenda
-            </button>
-          </div>
-
-          <!-- Copy para WhatsApp / Telegram -->
-          <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative">
-            <span class="text-xs font-bold text-green-600 uppercase tracking-wider block mb-1">2. Mensagem para Grupos & WhatsApp</span>
-            <pre id="copyZap" class="text-xs text-gray-700 whitespace-pre-wrap font-sans"></pre>
-            <button onclick="copyToClipboard('copyZap')" class="mt-2 text-xs bg-green-600 text-white px-3 py-1.5 rounded font-semibold hover:bg-green-700 flex items-center gap-1">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Mensagem
-            </button>
-          </div>
-
-          <!-- Roteiro de Vídeo -->
-          <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative">
-            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider block mb-1">3. Roteiro Rápido para Gravação (15s)</span>
-            <pre id="roteiroVideo" class="text-xs text-gray-700 whitespace-pre-wrap font-sans"></pre>
-          </div>
-        </div>
-
-        <div id="noSelectionNotice" class="text-center py-8 text-gray-400 text-sm">
-          Nenhum produto selecionado para divulgação. Cadastre ou clique em um produto acima.
-        </div>
-      </div>
-
-    </section>
-
-  </main>
-
-  <script>
-    // Inicializar ícones
-    lucide.createIcons();
-
-    let products = JSON.parse(localStorage.getItem('np_products')) || [
-      {
-        id: 1,
-        title: "Mini Projetor Smart Portátil Full HD",
-        price: "269.90",
-        oldPrice: "399.90",
-        link: "https://meli.la/1PgQ1ed",
-        img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=300&q=80",
-        features: ["Qualidade de Imagem Impressionante", "Compacto e Fácil de Transportar", "Entrega Rápida"]
-      }
-    ];
-
-    let selectedProductId = null;
-
-    const productForm = document.getElementById('productForm');
-    const productList = document.getElementById('productList');
-    const divulgacaoArea = document.getElementById('divulgacaoArea');
-    const noSelectionNotice = document.getElementById('noSelectionNotice');
-
-    function renderProducts() {
-      productList.innerHTML = '';
-      if (products.length === 0) {
-        productList.innerHTML = '<p class="text-sm text-gray-400">Nenhum produto cadastrado ainda.</p>';
-        return;
-      }
-
-      products.forEach(p => {
-        const card = document.createElement('div');
-        card.className = `p-3 border rounded-lg flex items-center justify-between gap-3 cursor-pointer transition ${selectedProductId === p.id ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-orange-300'}`;
-        card.onclick = () => selectProduct(p.id);
-
-        card.innerHTML = `
-          <img src="${p.img}" alt="${p.title}" class="w-12 h-12 rounded object-cover border">
-          <div class="flex-1 min-w-0">
-            <h4 class="font-bold text-sm text-gray-800 truncate">${p.title}</h4>
-            <p class="text-xs text-orange-600 font-semibold">R$ ${p.price} <span class="line-through text-gray-400 font-normal">R$ ${p.oldPrice || ''}</span></p>
-          </div>
-          <button onclick="deleteProduct(event, ${p.id})" class="text-gray-400 hover:text-red-500 p-1">
-            <i data-lucide="trash-2" class="w-4 h-4"></i>
-          </button>
-        `;
-        productList.appendChild(card);
-      });
-      lucide.createIcons();
-    }
-
-    productForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newProd = {
-        id: Date.now(),
-        title: document.getElementById('pTitle').value,
-        price: parseFloat(document.getElementById('pPrice').value).toFixed(2),
-        oldPrice: document.getElementById('pOldPrice').value ? parseFloat(document.getElementById('pOldPrice').value).toFixed(2) : '',
-        link: document.getElementById('pLink').value,
-        img: document.getElementById('pImg').value,
-        features: document.getElementById('pFeatures').value ? document.getElementById('pFeatures').value.split(',').map(f => f.trim()) : ["Excelente Custo-Benefício", "Envio Rápido"]
-      };
-
-      products.unshift(newProd);
-      localStorage.setItem('np_products', JSON.stringify(products));
-      productForm.reset();
-      renderProducts();
-      selectProduct(newProd.id);
-    });
-
-    function deleteProduct(e, id) {
-      e.stopPropagation();
-      products = products.filter(p => p.id !== id);
-      localStorage.setItem('np_products', JSON.stringify(products));
-      if (selectedProductId === id) {
-        selectedProductId = null;
-        divulgacaoArea.classList.add('hidden');
-        noSelectionNotice.classList.remove('hidden');
-      }
-      renderProducts();
-    }
-
-    function selectProduct(id) {
-      selectedProductId = id;
-      renderProducts();
-      const p = products.find(prod => prod.id === id);
-      if (!p) return;
-
-      const featsList = p.features.map(f => `🔹 ${f}`).join('\n');
-
-      // Preencher Copies
-      document.getElementById('copyRedes').textContent = 
-`🚨 PROMOÇÃO IMPERDÍVEL!
-${p.title} 🔥
-
-${featsList}
-
-💰 De R$ ${p.oldPrice || '---'} por apenas R$ ${p.price}!
-
-🛒 Garanta o seu com preço promocional:
-👉 Link no perfil ou comente "EU QUERO" que envio o link no privado!
-🔗 ${p.link}`;
-
-      document.getElementById('copyZap').textContent = 
-`👋 Olá! Veja esta oferta especial que separei para você:
-
-*${p.title}* por apenas *R$ ${p.price}*! 📦
-
-Confira todos os detalhes e garanta a sua unidade antes que acabe o estoque:
-➡️ ${p.link}`;
-
-      document.getElementById('roteiroVideo').textContent = 
-`[00:00 - 00:03] Gancho Visual: Mostre o produto em ação num ângulo chamativo.
-Texto na tela: "Achei o melhor custo-benefício do ano!"
-
-[00:03 - 00:10] Destaques: Mostre 2 ou 3 qualidades principais (${p.features.slice(0,2).join(', ')}).
-Locução/Texto: "${p.title} por apenas R$ ${p.price}!"
-
-[00:10 - 00:15] Chamada para Ação (CTA): Apunte para o perfil/link.
-Texto na tela: "Clique no link para garantir o seu antes que esgoste!"`;
-
-      divulgacaoArea.classList.remove('hidden');
-      noSelectionNotice.classList.add('hidden');
-    }
-
-    function copyToClipboard(elementId) {
-      const text = document.getElementById(elementId).textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Texto copiado para a área de transferência!");
-      });
-    }
-
-    // Carregar lista ao iniciar
-    renderProducts();
-    if(products.length > 0) selectProduct(products[0].id);
-  </script>
-</body>
-</html>
+    <h3 class="text-md font-bold text-orange-400 mb-2">📲 Legenda Pronta</h3>
+    <div id="legendaOutput" class="p-3 bg-[#0d1117] text-gray-200 text-sm rounded-lg border border-gray-800"></div>
+  </div>
+</div>
