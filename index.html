@@ -22,7 +22,7 @@
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center font-bold text-white text-2xl shadow-lg">K</div>
         <div>
-          <h1 class="text-xl font-bold text-white">Klico IA - Painel Pro</h1>
+          <h1 class="text-xl font-bold text-white">Klico Ofertas - Painel Pro</h1>
           <p class="text-xs text-orange-400 font-semibold flex items-center gap-1">
             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Sistema de Automação Ativo
           </p>
@@ -30,8 +30,8 @@
       </div>
       <!-- Menu de Abas -->
       <div class="flex bg-[#0d1117] p-1 rounded-xl border border-gray-700 text-xs">
-        <button onclick="mudarAba('gerador')" id="btn-gerador" class="px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all">Divulgação IA</button>
-        <button onclick="mudarAba('config')" id="btn-config" class="px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all">Configurações</button>
+        <button onclick="mudarAba('gerador')" id="btn-gerador" class="px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all cursor-pointer">Divulgação IA</button>
+        <button onclick="mudarAba('config')" id="btn-config" class="px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all cursor-pointer">Configurações</button>
       </div>
     </div>
 
@@ -49,8 +49,8 @@
         </div>
         <div class="card rounded-xl p-4">
           <p class="text-xs text-gray-400">Status da API Gemini</p>
-          <p class="text-xs font-bold text-green-400 mt-2 flex items-center gap-1">
-            <i class="fas fa-check-circle"></i> Conectado e Pronto
+          <p id="statusApiBadge" class="text-xs font-bold text-yellow-400 mt-2 flex items-center gap-1">
+            <i class="fas fa-exclamation-circle"></i> Verifique a Chave
           </p>
         </div>
       </div>
@@ -75,6 +75,9 @@
         <div id="statusLoading" class="mt-4 hidden text-center text-orange-400 text-sm animate-pulse">
           <i class="fas fa-spinner fa-spin mr-2"></i> A inteligência artificial está criando sua propaganda de alta conversão...
         </div>
+
+        <!-- Mensagem de Erro na Tela -->
+        <div id="erroBox" class="mt-4 hidden p-3 bg-red-900/40 border border-red-700 text-red-200 text-xs rounded-lg"></div>
 
         <!-- Resultados -->
         <div id="resultadoSecao" class="mt-6 space-y-4 hidden">
@@ -121,9 +124,9 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-300 mb-1">Chave da API Google Gemini</label>
-            <input id="geminiApiKey" type="password" placeholder="Cole sua API Key do Google AI Studio" 
+            <input id="geminiApiKey" type="password" placeholder="Cole sua API Key do Google AI Studio (AIzaSy...)" 
                    class="w-full p-3 rounded-lg bg-[#0d1117] border border-gray-700 text-white text-sm focus:outline-none focus:border-orange-500">
-            <p class="text-[10px] text-gray-500 mt-1">Necessária para alimentar o motor de inteligência artificial do gerador.</p>
+            <p class="text-[10px] text-gray-500 mt-1">Insira a chave gerada no Google AI Studio (começa com AIzaSy).</p>
           </div>
           <button onclick="salvarConfiguracoes()" class="w-full py-3 bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold rounded-lg transition-all shadow-md cursor-pointer">
             <i class="fas fa-save mr-1"></i> Salvar Alterações
@@ -134,36 +137,62 @@
 
   </div>
 
-  <!-- SCRIPT DE FUNCIONAMENTO -->
+  <!-- SCRIPT CORRIGIDO E BLINDADO -->
   <script>
     window.onload = function() {
       const savedTag = localStorage.getItem('shopee_tag') || '';
       const savedKey = localStorage.getItem('gemini_api_key') || '';
       if (savedTag) document.getElementById('tagAfiliado').value = savedTag;
-      if (savedKey) document.getElementById('geminiApiKey').value = savedKey;
+      if (savedKey) {
+        document.getElementById('geminiApiKey').value = savedKey;
+        atualizarBadgeApi(true);
+      }
     };
+
+    function atualizarBadgeApi(ativo) {
+      const badge = document.getElementById('statusApiBadge');
+      if (ativo) {
+        badge.className = "text-xs font-bold text-green-400 mt-2 flex items-center gap-1";
+        badge.innerHTML = '<i class="fas fa-check-circle"></i> Conectado e Pronto';
+      } else {
+        badge.className = "text-xs font-bold text-yellow-400 mt-2 flex items-center gap-1";
+        badge.innerHTML = '<i class="fas fa-exclamation-circle"></i> Verifique a Chave';
+      }
+    }
 
     function mudarAba(aba) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById('btn-gerador').className = "px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all";
-      document.getElementById('btn-config').className = "px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all";
+      document.getElementById('btn-gerador').className = "px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all cursor-pointer";
+      document.getElementById('btn-config').className = "px-4 py-2 rounded-lg font-semibold text-gray-400 hover:text-white transition-all cursor-pointer";
 
       if (aba === 'gerador') {
         document.getElementById('tab-gerador').classList.add('active');
-        document.getElementById('btn-gerador').className = "px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all";
+        document.getElementById('btn-gerador').className = "px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all cursor-pointer";
       } else {
         document.getElementById('tab-config').classList.add('active');
-        document.getElementById('btn-config').className = "px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all";
+        document.getElementById('btn-config').className = "px-4 py-2 rounded-lg font-bold bg-orange-600 text-white transition-all cursor-pointer";
       }
     }
 
     function salvarConfiguracoes() {
       const tag = document.getElementById('tagAfiliado').value.trim();
       const key = document.getElementById('geminiApiKey').value.trim();
+      
+      if (!key.startsWith('AIzaSy')) {
+        alert("Atenção: A chave da API do Gemini geralmente começa com 'AIzaSy'. Verifique se copiou corretamente.");
+      }
+
       localStorage.setItem('shopee_tag', tag);
       localStorage.setItem('gemini_api_key', key);
-      alert('Configurações salvas com sucesso!');
-      mudarAba('gerador');
+      
+      if (key) {
+        atualizarBadgeApi(true);
+        alert('Configurações salvas com sucesso!');
+        mudarAba('gerador');
+      } else {
+        atualizarBadgeApi(false);
+        alert('Insira uma chave válida.');
+      }
     }
 
     async function gerarDivulgacaoComIA() {
@@ -171,6 +200,10 @@
       const apiKey = localStorage.getItem('gemini_api_key') || document.getElementById('geminiApiKey').value.trim();
       const statusLoading = document.getElementById('statusLoading');
       const resultadoSecao = document.getElementById('resultadoSecao');
+      const erroBox = document.getElementById('erroBox');
+
+      erroBox.classList.add('hidden');
+      erroBox.innerText = '';
 
       if (!input) {
         alert("Por favor, cole o link ou o título do produto!");
@@ -192,6 +225,57 @@ Analise este link ou produto da Shopee: "${input}".
 Crie um pacote de divulgação de alta conversão estruturado exatamente assim em português:
 
 1. [GANCHO VIRAL (0-3s)]: Frase chamativa e curiosa para prender o espectador imediatamente.
+2. [ROTEIRO DE NARRAÇÃO (3-12s)]: Texto persuasivo destacando a utilidade principal para ser narrado dinamicamente.
+3. [CHAMADA PARA AÇÃO (CTA) (12-15s)]: Chamada imperativa para clicar no link da bio.
+4. [LEGENDA TIKTOK]: Texto comercial criativo com emojis.`;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error.message || "Erro retornado pela API do Google");
+        }
+
+        if (!data.candidates || data.candidates.length === 0) {
+          throw new Error("A IA não retornou nenhum conteúdo. Tente novamente.");
+        }
+
+        const respostaTexto = data.candidates[0].content.parts[0].text;
+
+        statusLoading.classList.add('hidden');
+        resultadoSecao.classList.remove('hidden');
+
+        document.getElementById('roteiroOutput').innerText = respostaTexto;
+        document.getElementById('legendaOutput').innerText = `🔥 ACHADINHO IMPERDÍVEL DA SHOPEE!\n\nGaranta o seu com desconto exclusivo.\n👉 Acesse o link oficial na bio do perfil!\n\n#achadinhosshopee #shopee #viral #desconto #tiktokmefezcomprar`;
+
+        let contador = parseInt(document.getElementById('contadorVideos').innerText) + 1;
+        document.getElementById('contadorVideos').innerText = contador;
+
+      } catch (erro) {
+        statusLoading.classList.add('hidden');
+        erroBox.classList.remove('hidden');
+        erroBox.innerText = "Erro ao processar: " + erro.message + ". Verifique se a chave de API está ativa no Google AI Studio.";
+      }
+    }
+
+    function copiarTexto(elementId) {
+      const texto = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("Conteúdo copiado com sucesso para a área de transferência!");
+      });
+    }
+  </script>
+</body>
+</html>
+chamativa e curiosa para prender o espectador imediatamente.
 2. [ROTEIRO DE NARRAÇÃO (3-12s)]: Texto persuasivo destacando a utilidade principal para ser narrado dinamicamente.
 3. [CHAMADA PARA AÇÃO (CTA) (12-15s)]: Chamada imperativa para clicar no link da bio.
 4. [LEGENDA TIKTOK]: Texto comercial criativo com emojis.`;
